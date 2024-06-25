@@ -25,13 +25,10 @@ jobs:
         dotnet-version: '3.1.x'
 
     - name: Set up Azure CLI
-      uses: azure/CLI@v1
-      with:
-        inlineScript: |
-          az cloud set --name ${{ secrets.CLOUD_NAME }}
+      run: |
+        az cloud set --name AzureCloud
       env:
         AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-        CLOUD_NAME: 'AzureCloud'
 
     - name: Azure Login
       uses: azure/login@v1
