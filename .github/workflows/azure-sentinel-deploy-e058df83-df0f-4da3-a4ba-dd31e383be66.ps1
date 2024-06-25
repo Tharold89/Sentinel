@@ -1,3 +1,20 @@
+# Import required modules
+Install-Module -Name Az -AllowClobber -Force -Scope CurrentUser
+Import-Module Az
+
+# Clear any existing Azure context
+Clear-AzContext -Scope Process
+Clear-AzContext -Scope CurrentUser -Force -ErrorAction SilentlyContinue
+
+# Authenticate to Azure
+$RawCreds = ConvertFrom-Json $env:AZURE_CREDENTIALS
+$servicePrincipalKey = ConvertTo-SecureString $RawCreds.clientSecret -AsPlainText -Force
+$pscredential = New-Object System.Management.Automation.PSCredential($RawCreds.clientId, $servicePrincipalKey)
+Connect-AzAccount -ServicePrincipal -Credential $pscredential -TenantId $RawCreds.tenantId
+
+# Add Azure environment if necessary
+Add-AzEnvironment -Name $env:cloudEnv -ArmEndpoint $env:resourceManagerEndpointUrl
+
 ## Globals ##
 $CloudEnv = $Env:cloudEnv
 $ResourceGroupName = $Env:resourceGroupName
