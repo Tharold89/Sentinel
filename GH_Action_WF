@@ -18,6 +18,10 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Run Sentinel Content Deployment Script
+    - name: Deploy Initial Sentinel Resources
       run: |
-        pwsh ./.github/workflows/azure-sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.ps1 -resourceGroupName 'AZ104' -templateFile './azuredeploy.json'
+        pwsh ./.github/workflows/azure-sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.ps1 -resourceGroupName 'AZ104' -templateFile './.github/workflows/azuredeploy.json'
+
+    - name: Deploy Additional Sentinel Resources
+      run: |
+        pwsh ./.github/workflows/azure-sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.ps1 -resourceGroupName 'AZ104' -templateFile './.github/workflows/azuredeploy-additional.json'
