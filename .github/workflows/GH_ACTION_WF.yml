@@ -1,4 +1,4 @@
-name: Deploy to Azure
+name: Deploy Azure Sentinel Resources
 
 on:
   push:
@@ -8,27 +8,20 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Set up job
-      run: echo "Setting up job"
-
-    - name: Pre Azure Login
-      run: echo "Clearing any previous Azure sessions"
-      shell: bash
-
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up .NET
+    - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '3.1.x'
+        dotnet-version: '5.0.x'
 
     - name: Set up Azure CLI
-      run: |
-        az cloud set --name ${{ secrets.CLOUD_ENV }}
-      env:
-        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      uses: azure/CLI@v1
+      with:
+        inlineScript: az cloud set --name ${{ secrets.CLOUD_ENV }}
 
     - name: Azure Login
       uses: azure/login@v1
@@ -36,18 +29,16 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Run deployment script
-      run: pwsh ./azure-sentinel-deploy.ps1
-      env:
-        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-        CLOUD_ENV: ${{ secrets.CLOUD_ENV }}
-        RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
-        WORKSPACE_NAME: ${{ secrets.WORKSPACE_NAME }}
-        WORKSPACE_ID: ${{ secrets.WORKSPACE_ID }}
-        DIRECTORY: ${{ secrets.DIRECTORY }}
-        CONTENT_TYPES: ${{ secrets.CONTENT_TYPES }}
-        SOURCE_CONTROL_ID: ${{ secrets.SOURCE_CONTROL_ID }}
-        ROOT_DIRECTORY: ${{ secrets.ROOT_DIRECTORY }}
-        GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_AUTH_TOKEN }}
-        GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
-        BRANCH_NAME: ${{ secrets.BRANCH_NAME }}
-        SMART_DEPLOYMENT: ${{ secrets.SMART_DEPLOYMENT }}
+      run: |
+        pwsh ./path/to/azure-sentinel-deploy.ps1 `
+          -resourceGroupName ${{ secrets.RESOURCE_GROUP_NAME }} `
+          -workspaceName ${{ secrets.WORKSPACE_NAME }} `
+          -workspaceId ${{ secrets.WORKSPACE_ID }} `
+          -directory ${{ secrets.DIRECTORY }} `
+          -contentTypes ${{ secrets.CONTENT_TYPES }} `
+          -sourceControlId ${{ secrets.SOURCE_CONTROL_ID }} `
+          -rootDirectory ${{ secrets.ROOT_DIRECTORY }} `
+          -githubAuthToken ${{ secrets.GH_AUTH_TOKEN }} `
+          -githubRepository ${{ secrets.GH_REPOSITORY }} `
+          -branchName ${{ secrets.BRANCH_NAME }} `
+          -smartDeployment ${{ secrets.SMART_DEPLOYMENT }}
