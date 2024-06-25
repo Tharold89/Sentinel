@@ -1,4 +1,4 @@
-name: Azure Sentinel Deployment
+name: Deploy to Azure
 
 on:
   push:
@@ -8,22 +8,30 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
+    - name: Set up job
+      run: echo "Setting up job"
+
+    - name: Pre Azure Login
+      run: echo "Clearing any previous Azure sessions"
+      shell: bash
+
     - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Set up .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0.x'
+        dotnet-version: '3.1.x'
 
     - name: Set up Azure CLI
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          az cloud set --name ${{ secrets.AZURE_CLOUD }}
-          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+          az cloud set --name ${{ secrets.CLOUD_NAME }}
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+        CLOUD_NAME: 'AzureCloud'
 
     - name: Azure Login
       uses: azure/login@v1
@@ -31,18 +39,19 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
     - name: Run deployment script
-      run: pwsh ./Sentinel/AZ_Sentinel_Deploy.ps1
-
-    - name: Post Checkout repository
-      run: |
-        git config --global user.email "donotreply@microsoft.com"
-        git config --global user.name "Sentinel"
-        git add .
-        git commit -m "Post deployment updates"
-        git push origin main
-
-    - name: Post Azure Login
-      run: az account clear
-
-    - name: Complete job
-      run: echo "Deployment complete"
+      run: pwsh ./azure-sentinel-deploy.ps1
+      env:
+        AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+        CLOUD_ENV: ${{ secrets.CLOUD_ENV }}
+        RESOURCE_GROUP_NAME: ${{ secrets.RESOURCE_GROUP_NAME }}
+        WORKSPACE_NAME: ${{ secrets.WORKSPACE_NAME }}
+        WORKSPACE_ID: ${{ secrets.WORKSPACE_ID }}
+        DIRECTORY: ${{ secrets.DIRECTORY }}
+        CREDS: ${{ secrets.AZURE_CREDENTIALS }}
+        CONTENT_TYPES: ${{ secrets.CONTENT_TYPES }}
+        SOURCE_CONTROL_ID: ${{ secrets.SOURCE_CONTROL_ID }}
+        ROOT_DIRECTORY: ${{ secrets.ROOT_DIRECTORY }}
+        GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_AUTH_TOKEN }}
+        GITHUB_REPOSITORY: ${{ secrets.GITHUB_REPOSITORY }}
+        BRANCH_NAME: ${{ secrets.BRANCH_NAME }}
+        SMART_DEPLOYMENT: ${{ secrets.SMART_DEPLOYMENT }}
