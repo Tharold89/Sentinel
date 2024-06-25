@@ -7,6 +7,73 @@
         }
     },
     "resources": [
-        // Additional resources go here
+        {
+            "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+            "apiVersion": "2022-11-01-preview",
+            "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/12345678-1234-1234-1234-123456789012')]",
+            "properties": {
+                "displayName": "Additional Alert Rule",
+                "description": "Description of the additional alert rule.",
+                "severity": "High",
+                "enabled": true,
+                "query": "SecurityAlert | where AlertSeverity == 'High'",
+                "queryFrequency": "PT15M",
+                "queryPeriod": "PT15M",
+                "triggerOperator": "GreaterThan",
+                "triggerThreshold": 0,
+                "tactics": ["Persistence"],
+                "techniques": ["T1078"],
+                "alertRuleTemplateName": "template-1234-5678",
+                "incidentConfiguration": {
+                    "createIncident": true,
+                    "groupingConfiguration": {
+                        "enabled": true,
+                        "reopenClosedIncident": false,
+                        "lookbackDuration": "PT1H",
+                        "matchingMethod": "Selected",
+                        "groupByEntities": ["Account"],
+                        "groupByAlertDetails": [],
+                        "groupByCustomDetails": []
+                    }
+                },
+                "eventGroupingSettings": {
+                    "aggregationKind": "SingleAlert"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.OperationalInsights/workspaces/providers/analyticsRules",
+            "apiVersion": "2022-11-01-preview",
+            "name": "[concat(parameters('workspace'),'/Microsoft.SecurityInsights/98765432-1234-1234-1234-987654321098')]",
+            "properties": {
+                "displayName": "Additional Analytics Rule",
+                "description": "Description of the additional analytics rule.",
+                "severity": "Low",
+                "enabled": true,
+                "query": "SecurityEvent | where EventID == 4625",
+                "queryFrequency": "PT30M",
+                "queryPeriod": "PT30M",
+                "triggerOperator": "GreaterThan",
+                "triggerThreshold": 10,
+                "tactics": ["CredentialAccess"],
+                "techniques": ["T1110"],
+                "alertRuleTemplateName": "template-9876-5432",
+                "incidentConfiguration": {
+                    "createIncident": true,
+                    "groupingConfiguration": {
+                        "enabled": true,
+                        "reopenClosedIncident": false,
+                        "lookbackDuration": "PT2H",
+                        "matchingMethod": "Selected",
+                        "groupByEntities": ["Host"],
+                        "groupByAlertDetails": [],
+                        "groupByCustomDetails": []
+                    }
+                },
+                "eventGroupingSettings": {
+                    "aggregationKind": "AlertPerResult"
+                }
+            }
+        }
     ]
 }
