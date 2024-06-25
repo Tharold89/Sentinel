@@ -1,20 +1,11 @@
 name: Deploy Content to WS-Sentinel [e058df83-df0f-4da3-a4ba-dd31e383be66]
-# Note: This workflow will deploy everything in the root directory.
-# To deploy content only from a specific path (for example SentinelContent):
-#   1. Add the target path to the "paths" property like such
-#    paths:
-#    - 'SentinelContent/**'
-#    - '!.github/workflows/**'
-#    - '.github/workflows/sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.yml'
-#   2. Append the path to the directory environment variable below
-#       directory: '${{ github.workspace }}/SentinelContent'
 
 on: 
   push:
     branches: [ main ]
     paths:
     - '**'
-    - '!.github/workflows/**'  # this filter prevents other workflow changes from triggering this workflow
+    - '!.github/workflows/**'  
     - '.github/workflows/sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.yml'
 
 jobs:
@@ -74,8 +65,5 @@ jobs:
       uses: actions/checkout@v3
     
     - name: Deploy Content to Azure Sentinel
-      uses: azure/powershell@v1
-      with:
-        azPSVersion: 'latest'
-        inlineScript: |
-          ${{ github.workspace }}//.github/workflows/azure-sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.ps1
+      run: |
+        pwsh ./.github/workflows/azure-sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.ps1
