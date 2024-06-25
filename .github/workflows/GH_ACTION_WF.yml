@@ -26,7 +26,7 @@ jobs:
 
     - name: Set up Azure CLI
       run: |
-        az cloud set --name AzureCloud
+        az cloud set --name ${{ secrets.CLOUD_ENV }}
       env:
         AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
 
@@ -44,7 +44,6 @@ jobs:
         WORKSPACE_NAME: ${{ secrets.WORKSPACE_NAME }}
         WORKSPACE_ID: ${{ secrets.WORKSPACE_ID }}
         DIRECTORY: ${{ secrets.DIRECTORY }}
-        CREDS: ${{ secrets.AZURE_CREDENTIALS }}
         CONTENT_TYPES: ${{ secrets.CONTENT_TYPES }}
         SOURCE_CONTROL_ID: ${{ secrets.SOURCE_CONTROL_ID }}
         ROOT_DIRECTORY: ${{ secrets.ROOT_DIRECTORY }}
