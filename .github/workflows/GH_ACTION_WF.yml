@@ -30,7 +30,7 @@ jobs:
 
     - name: Run deployment script
       run: |
-        pwsh ./path/to/azure-sentinel-deploy.ps1 `
+        pwsh ./.github/workflows/azure-sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.ps1 `
           -resourceGroupName ${{ secrets.RESOURCE_GROUP_NAME }} `
           -workspaceName ${{ secrets.WORKSPACE_NAME }} `
           -workspaceId ${{ secrets.WORKSPACE_ID }} `
