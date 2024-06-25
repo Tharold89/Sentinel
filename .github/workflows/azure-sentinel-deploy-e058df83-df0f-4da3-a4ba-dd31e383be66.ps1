@@ -40,11 +40,9 @@ $smartDeployment = $Env:smartDeployment
 $newResourceBranch = $branchName + "-sentinel-deployment"
 $csvPath = "$rootDirectory\.sentinel\tracking_table_$sourceControlId.csv"
 $configPath = "$rootDirectory\sentinel-deployment.config"
-$global:localCsvTablefinal = @{}
 $global:updatedCsvTable = @{}
 $global:parameterFileMapping = @{}
 $global:prioritizedContentFiles = @()
-$global:excludeContentFiles = @()
 
 $guidPattern = '(\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b)'
 $namePattern = '([-\w\._\(\)]+)'
@@ -427,11 +425,11 @@ function LoadDeploymentConfig() {
             $deployment_config = Get-Content $configPath | Out-String | ConvertFrom-Json
             $parameterFileMappings = @{}
             if ($deployment_config.parameterfilemappings) {
-                $deployment_config.parameterfilemappings.psobject.properties | ForEach { $parameterFileMappings[$_.Name] = $_.Value }
+                $deployment_config.parameterfilemappings.psobject.properties | ForEach-Object { $parameterFileMappings[$_.Name] = $_.Value }
             }
             $key = ($parameterFileMappings.Keys | ? { $_ -eq $workspaceId })
             if ($null -ne $key) {
-                $parameterFileMappings[$key].psobject.properties | ForEach { $global:parameterFileMapping[$_.Name] = $_.Value }
+                $parameterFileMappings[$key].psobject.properties | ForEach-Object { $global:parameterFileMapping[$_.Name] = $_.Value }
             }
             if ($deployment_config.prioritizedcontentfiles) {
                 $global:prioritizedContentFiles = $deployment_config.prioritizedcontentfiles
