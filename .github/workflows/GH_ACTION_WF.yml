@@ -2,7 +2,8 @@ name: Deploy Azure Sentinel
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -11,6 +12,9 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+
+    - name: Set up Azure CLI
+      uses: azure/CLI@v1
 
     - name: Log in to Azure
       uses: azure/login@v1
