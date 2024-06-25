@@ -1,0 +1,23 @@
+name: Deploy Azure Sentinel
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Azure CLI
+      uses: azure/CLI@v1
+
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Run Sentinel Content Deployment Script
+      run: |
+        pwsh ./.github/workflows/azure-sentinel-deploy-e058df83-df0f-4da3-a4ba-dd31e383be66.ps1 -resourceGroupName 'AZ104' -templateFile './azuredeploy.json'
